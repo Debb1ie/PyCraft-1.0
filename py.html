@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyCraft — Build the Web with Python</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --py-yellow: #FFD43B;
+    --py-blue: #306998;
+    --py-blue-dark: #1a3d5c;
+    --ink: #0f0e0a;
+    --cream: #faf6ee;
+    --warm-gray: #e8e2d4;
+    --accent-orange: #e8600a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(250,246,238,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--warm-gray);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--py-blue-dark);
+    letter-spacing: -0.03em;
+  }
+  .nav-logo span { color: var(--py-yellow); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--ink);
+    text-decoration: none; opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-cta {
+    background: var(--py-blue-dark); color: var(--cream) !important;
+    opacity: 1 !important;
+    padding: 0.5rem 1.2rem; border-radius: 4px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+  }
+  .hero-left {
+    padding: 8rem 3rem 4rem 5rem;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem; color: var(--accent-orange);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 900; line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: var(--py-blue-dark);
+  }
+  .hero-title em {
+    font-style: italic; color: var(--accent-orange);
+  }
+  .hero-sub {
+    margin-top: 2rem;
+    font-size: 1.1rem; font-weight: 300;
+    line-height: 1.7; max-width: 420px;
+    color: #4a4640;
+  }
+  .hero-btns { display: flex; gap: 1rem; margin-top: 3rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--py-blue-dark); color: var(--cream);
+    padding: 0.9rem 2.2rem; border-radius: 6px;
+    font-weight: 500; font-size: 0.95rem;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--py-blue); transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent; color: var(--ink);
+    padding: 0.9rem 2.2rem; border-radius: 6px;
+    font-weight: 500; font-size: 0.95rem;
+    text-decoration: none; border: 2px solid var(--warm-gray);
+    cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+  .hero-right {
+    background: var(--py-blue-dark);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding: 4rem;
+  }
+  .hero-right::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 60%, rgba(255,212,59,0.12) 0%, transparent 70%);
+  }
+  .code-block {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.88rem; line-height: 1.8;
+    color: #c8d8e8;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 2.5rem;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+  }
+  .code-block .dot-bar {
+    display: flex; gap: 6px; margin-bottom: 1.5rem;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+  .c-comment { color: #6a8a9a; }
+  .c-keyword { color: var(--py-yellow); font-weight: 500; }
+  .c-func { color: #88d4ab; }
+  .c-string { color: #f4a26a; }
+  .c-num { color: #c9a6e8; }
+
+  /* ── FEATURES ── */
+  .features {
+    padding: 8rem 5rem;
+    background: var(--cream);
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem; color: var(--accent-orange);
+    letter-spacing: 0.14em; text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-weight: 700; letter-spacing: -0.03em;
+    color: var(--py-blue-dark);
+    max-width: 520px; line-height: 1.15;
+    margin-bottom: 5rem;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    background: var(--warm-gray);
+    border: 3px solid var(--warm-gray);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .feat-card {
+    background: var(--cream);
+    padding: 3rem 2.5rem;
+    transition: background 0.2s;
+  }
+  .feat-card:hover { background: #fff; }
+  .feat-icon {
+    font-size: 2.2rem; margin-bottom: 1.5rem; display: block;
+  }
+  .feat-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--py-blue-dark);
+    margin-bottom: 0.75rem;
+  }
+  .feat-desc {
+    font-size: 0.9rem; line-height: 1.7; color: #5a534a;
+  }
+
+  /* ── FRAMEWORKS ── */
+  .frameworks {
+    padding: 7rem 5rem;
+    background: var(--py-blue-dark);
+    color: var(--cream);
+    position: relative; overflow: hidden;
+  }
+  .frameworks::before {
+    content: 'PYTHON';
+    position: absolute; right: -2rem; top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Playfair Display', serif;
+    font-size: 12rem; font-weight: 900; opacity: 0.04;
+    letter-spacing: -0.05em;
+    color: var(--py-yellow);
+    white-space: nowrap;
+  }
+  .frameworks .section-label { color: var(--py-yellow); }
+  .frameworks .section-title { color: var(--cream); }
+  .fw-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .fw-item {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 2.2rem;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative; z-index: 1;
+  }
+  .fw-item:hover { border-color: var(--py-yellow); transform: translateY(-4px); }
+  .fw-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.1rem; font-weight: 500;
+    color: var(--py-yellow); margin-bottom: 0.6rem;
+  }
+  .fw-desc { font-size: 0.88rem; line-height: 1.65; opacity: 0.65; }
+  .fw-tag {
+    display: inline-block; margin-top: 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.25rem 0.7rem;
+    border-radius: 3px;
+    background: rgba(255,212,59,0.15);
+    color: var(--py-yellow);
+  }
+
+  /* ── STATS ── */
+  .stats {
+    padding: 6rem 5rem;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--warm-gray);
+    border-top: 1px solid var(--warm-gray);
+    border-bottom: 1px solid var(--warm-gray);
+  }
+  .stat-item {
+    background: var(--cream);
+    padding: 3rem 2rem; text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem; font-weight: 900;
+    color: var(--py-blue-dark);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .stat-num span { color: var(--accent-orange); }
+  .stat-label {
+    font-size: 0.8rem; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: #8a837a; margin-top: 0.6rem;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    padding: 8rem 5rem;
+    text-align: center;
+    background: var(--cream);
+  }
+  .cta-section .section-title {
+    font-size: clamp(2.5rem, 4vw, 4rem);
+    max-width: 100%;
+    margin-left: auto; margin-right: auto;
+    margin-bottom: 2rem;
+  }
+  .cta-section p {
+    font-size: 1.05rem; color: #5a534a;
+    max-width: 500px; margin: 0 auto 3rem; line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 2.5rem 5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.82rem; opacity: 0.9;
+  }
+  footer a { color: var(--py-yellow); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.8s ease both; }
+  .delay-1 { animation-delay: 0.15s; }
+  .delay-2 { animation-delay: 0.3s; }
+  .delay-3 { animation-delay: 0.45s; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { min-height: 400px; }
+    .hero-left { padding: 8rem 2rem 4rem; }
+    .features { padding: 5rem 2rem; }
+    .features-grid, .fw-list { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    nav { padding: 1rem 1.5rem; }
+    .frameworks { padding: 5rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Py<span>●</span>Craft</div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#frameworks">Frameworks</a></li>
+    <li><a href="#docs">Docs</a></li>
+    <li><a href="#start" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag fade-up">// Web Development with Python</p>
+    <h1 class="hero-title fade-up delay-1">Build the<br><em>Beautiful</em><br>Web.</h1>
+    <p class="hero-sub fade-up delay-2">
+      Python isn't just for data science. Craft production-ready, stunning web experiences with the language you already love.
+    </p>
+    <div class="hero-btns fade-up delay-3">
+      <a href="#start" class="btn-primary">Start Building →</a>
+      <a href="#frameworks" class="btn-secondary">Explore Frameworks</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="code-block fade-up">
+      <div class="dot-bar">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+      </div>
+      <div><span class="c-comment"># PyCraft — Hello World</span></div>
+      <div>&nbsp;</div>
+      <div><span class="c-keyword">from</span> reflex <span class="c-keyword">import</span> rx</div>
+      <div>&nbsp;</div>
+      <div><span class="c-keyword">class</span> <span class="c-func">State</span>(rx.State):</div>
+      <div>&nbsp;&nbsp;name: <span class="c-keyword">str</span> = <span class="c-string">"World"</span></div>
+      <div>&nbsp;</div>
+      <div><span class="c-keyword">def</span> <span class="c-func">index</span>():</div>
+      <div>&nbsp;&nbsp;<span class="c-keyword">return</span> rx.vstack(</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;rx.heading(<span class="c-string">f"Hello, {State.name}!"</span>),</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;rx.input(</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;placeholder=<span class="c-string">"Your name..."</span>,</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;on_change=State.set_name</div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;)</div>
+      <div>&nbsp;&nbsp;)</div>
+      <div>&nbsp;</div>
+      <div>app = rx.App()</div>
+      <div>app.add_page(index, route=<span class="c-string">"/"</span>)</div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <p class="section-label">Why Python for the Web</p>
+  <h2 class="section-title">Everything you need, nothing you don't.</h2>
+  <div class="features-grid">
+    <div class="feat-card">
+      <span class="feat-icon">🐍</span>
+      <h3 class="feat-title">Pythonic Syntax</h3>
+      <p class="feat-desc">No template hell, no JSX confusion. Write clean, readable Python — your components are just functions and classes.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">⚡</span>
+      <h3 class="feat-title">Instant Reactivity</h3>
+      <p class="feat-desc">Real-time state management, WebSocket-driven UI updates, and reactive data flows — all without touching JavaScript.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🔗</span>
+      <h3 class="feat-title">Full-Stack in One</h3>
+      <p class="feat-desc">Your backend logic and frontend components live together. Call your database, ML models, or APIs directly in your UI code.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">📦</span>
+      <h3 class="feat-title">Rich Ecosystem</h3>
+      <p class="feat-desc">Use the entire PyPI universe — pandas, NumPy, SQLAlchemy, Pydantic — all available in your web app without any bridge layer.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🎨</span>
+      <h3 class="feat-title">Beautiful by Default</h3>
+      <p class="feat-desc">Built-in Tailwind integration, component libraries, dark mode, and responsive design — polished UIs with minimal effort.</p>
+    </div>
+    <div class="feat-card">
+      <span class="feat-icon">🚀</span>
+      <h3 class="feat-title">Deploy Anywhere</h3>
+      <p class="feat-desc">One-command deploy to the cloud. Docker-ready, supports PostgreSQL, Redis, and scales horizontally without friction.</p>
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat-item">
+    <div class="stat-num">1<span>st</span></div>
+    <div class="stat-label">Most Popular Language</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">400<span>k+</span></div>
+    <div class="stat-label">PyPI Packages</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">12<span>M+</span></div>
+    <div class="stat-label">Python Developers</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">0</div>
+    <div class="stat-label">JavaScript Required</div>
+  </div>
+</div>
+
+<section class="frameworks" id="frameworks">
+  <p class="section-label">Python Web Frameworks</p>
+  <h2 class="section-title">Pick your weapon.</h2>
+  <div class="fw-list">
+    <div class="fw-item">
+      <div class="fw-name">Reflex</div>
+      <p class="fw-desc">Build full-stack web apps entirely in Python. Compiles to React under the hood with real-time state sync over WebSockets.</p>
+      <span class="fw-tag">Full-Stack</span>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">Streamlit</div>
+      <p class="fw-desc">Turn data scripts into shareable web apps in minutes. The go-to choice for ML engineers and data scientists.</p>
+      <span class="fw-tag">Data Apps</span>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">Django</div>
+      <p class="fw-desc">The "batteries included" framework. ORM, admin panel, auth — everything for production web development out of the box.</p>
+      <span class="fw-tag">Full-Stack</span>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">FastAPI</div>
+      <p class="fw-desc">Lightning-fast REST APIs with automatic OpenAPI docs. Built on Pydantic and async/await for blazing performance.</p>
+      <span class="fw-tag">API Backend</span>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">PyScript</div>
+      <p class="fw-desc">Run Python directly in the browser via WebAssembly. No server required — true client-side Python execution.</p>
+      <span class="fw-tag">Browser</span>
+    </div>
+    <div class="fw-item">
+      <div class="fw-name">Flask</div>
+      <p class="fw-desc">Micro-framework with maximum flexibility. Build exactly what you need, nothing more — perfect for APIs and small apps.</p>
+      <span class="fw-tag">Micro</span>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="start">
+  <p class="section-label">Ready to Start?</p>
+  <h2 class="section-title">Your first Python web app in under 5 minutes.</h2>
+  <p>Install Reflex, run one command, and watch your Python code become a real, reactive website.</p>
+  <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+    <a href="#" class="btn-primary">Read the Docs →</a>
+    <a href="#" class="btn-secondary">View on GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 PyCraft — Built with <a href="#">Python</a> & love 🐍</div>
+  <div style="display:flex; gap:2rem;">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
